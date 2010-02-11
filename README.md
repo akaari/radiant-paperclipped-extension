@@ -1,8 +1,19 @@
 Paperclipped
 ---
 
-acts_as_list  
-responds_to_parent
+## Fork notes
+
+I've updated this to support 0.9.0, We have a naming convention for all the extensions that we keep in our core.
+
+For that reason it is now called file, not paperclipped.
+
+Refactor Results
+
+* Cleaner differences between assets/bucket, this was originally undertaken by bkingman
+* Javascript and Styles work in 0.9.0
+* Interface has been brought into line with 0.9.0, lists and popups are now the norm
+* Use the word files, not assets.
+
 
 ## Fork notes
 

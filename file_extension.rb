@@ -11,7 +11,7 @@ class FileExtension < Radiant::Extension
     
     # Main RESTful routes for Assets
     map.namespace :admin, :member => { :remove => :get }, :collection => { :refresh => :post } do |admin|
-      admin.resources :assets
+      admin.resources :assets, :as => :files
     end
     
     # Bucket routes
@@ -24,7 +24,7 @@ class FileExtension < Radiant::Extension
     end
     
     # File downloader
-    map.resources :assets, :only => :show
+    map.resources :assets, :as => :files, :only => :show
   end
   
   extension_config do |config|
@@ -80,7 +80,7 @@ class FileExtension < Radiant::Extension
     end
     
     tab :Design do
-      add_item :Files, "/admin/assets", :before => :Layouts
+      add_item :Files, "/admin/files", :before => :Layouts
     end
     
   end
