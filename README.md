@@ -1,6 +1,9 @@
 Paperclipped
 ---
 
+acts_as_list  
+responds_to_parent
+
 ## Fork notes
 
 I've just refactored the Asset machinery, with these goals:

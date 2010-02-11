@@ -1,12 +1,3 @@
-document.observe("dom:loaded", function() {
-  if($('asset-bucket')){
-    new Draggable('asset-bucket', { starteffect: false, endeffect: false });
-  }
-  if($('page-attachments')){
-    Asset.ChooseTabByName('page-attachments');
-  }
-});
-
 var Asset = {};
 
 Asset.Tabs = Behavior.create({
@@ -57,25 +48,41 @@ Asset.AddToPage = Behavior.create({
     new Ajax.Updater('attachments', url, {
       asynchronous : true, 
       evalScripts  : true, 
-      method       : 'get'
-      // onComplete   : Element.highlight('page-attachments')
+      method       : 'get',
+      onSuccess    : Asset.ChooseTabByName('page-attachments')
     });
     
   }
 });
 
+Asset.AddToBucket = Behavior.create({
+  onclick: function(e){
+    e.stop();
+    url = this.element.href;
+    new Ajax.Request(url, {
+      onSuccess: function(response) {
+        //TODO some sort of feedback. not an alert
+      }
+    });
+  }
+});
+
 Asset.MakeDroppables = function () {
   $$('.textarea').each(function(box){
-    if (!box.hasClassName('droppable')) {
+    if (!box.hasClassName('droppable') && !box.hasClassName('wymified')) {
       Droppables.add(box, {
         accept: 'asset',
         onDrop: function(element) {
           var link = element.select('a.bucket_link')[0];
+          var asset_title = link.title;
           var asset_id = element.id.split('_').last();
           var classes = element.className.split(' ');
           var tag_type = classes[0];
-          var tag = '<r:assets:' + tag_type + ' id="' + asset_id + '" size="original" />';
-          //Form.Element.focus(box);
+          
+          var tag = '<r:assets:' + tag_type + ' title="'+ asset_title +'" />';
+          
+
+          Form.Element.focus(box);
         	if(!!document.selection){
         		box.focus();
         		var range = (box.range) ? box.range : document.selection.createRange();
@@ -94,52 +101,9 @@ Asset.MakeDroppables = function () {
   });
 }
 
-Asset.ShowBucket = Behavior.create({
-  onclick: function(e){
-    e.stop();
-    var element = $('asset-bucket');
-    center(element);
-    element.toggle();
-    Asset.MakeDroppables();
-  }
-});
-
-Asset.HideBucket = Behavior.create({
-  onclick: function(e){
-    e.stop();
-    var element = $('asset-bucket');
-    element.hide();
-  }
-});
-
-Asset.FileTypes = Behavior.create({
-  onclick: function(e){
-    e.stop();
-    var element = this.element;
-    var type_id = element.text.downcase();
-    var type_check = $(type_id + '-check');
-    var search_form = $('filesearchform');
-    if(element.hasClassName('pressed')) {
-      element.removeClassName('pressed');
-      type_check.removeAttribute('checked');
-    } else {
-      element.addClassName('pressed');
-      type_check.setAttribute('checked', 'checked');
-    }
-    new Ajax.Updater('assets_table', search_form.action, {
-      asynchronous: true, 
-      evalScripts:  true, 
-      parameters:   Form.serialize(search_form),
-      method: 'get',
-      onComplete: 'assets_table'
-    });
-  }
-});
-
 Asset.WaitingForm = Behavior.create({
   onsubmit: function(e){
     this.element.addClassName('waiting');
-    $('asset_submit').disable();
     return true;
   }
 });
@@ -147,13 +111,21 @@ Asset.WaitingForm = Behavior.create({
 Asset.ResetForm = function (name) {
   var element = $('asset-upload');
   element.removeClassName('waiting');
-  $('asset_submit').enable();
   element.reset();
+  
+  ta = $$(".wymified");
+	for (var i = 0; i < ta.length; i++){
+		boot_wym(ta[i]);
+	}
 }
 
 Asset.AddAsset = function (name) {
   element = $(name); 
   asset = element.select('.asset')[0];
+  if (window.console && window.console.log) {
+    console.log('inserted element is ', element);
+    console.log('contained asset is ', asset);
+  }
   if (asset) {
     new Draggable(asset, { revert: true });
   }
@@ -161,10 +133,25 @@ Asset.AddAsset = function (name) {
 
 Event.addBehavior({
   '#asset-tabs a'     : Asset.Tabs,
-  '#close-link a'     : Asset.HideBucket,
-  '#show-bucket a'    : Asset.ShowBucket,
   '#filesearchform a' : Asset.FileTypes,
   '#asset-upload'     : Asset.WaitingForm,
   'div.asset a'       : Asset.DisableLinks,
-  'a.add_asset'       : Asset.AddToPage
+  'a.add_asset'       : Asset.AddToPage,
+  '.add-to-bucket a'  : Asset.AddToBucket
+});
+
+// Stolen from the admin.js for Radiant, but for some reason it does not load. 
+// When object is available, do function fn.
+function when(obj, fn) {
+  if (Object.isString(obj)) obj = /^[\w-]+$/.test(obj) ? $(obj) : $(document.body).down(obj);
+  if (Object.isArray(obj) && !obj.length) return;
+  if (obj) fn(obj);
+}
+
+document.observe("dom:loaded", function() {
+  when('page-attachments', function(){ 
+    Asset.ChooseTabByName('page-attachments');
+    Asset.MakeDroppables();
+    Asset.MakeDraggables();
+  });  
 });
