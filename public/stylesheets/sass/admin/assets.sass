@@ -178,73 +178,67 @@
         :bottom     5px
 
 
-// TODO tidy up
-
-
-#assets-table table
-  margin-bottom: 0
-
-
-table
-  &.index
-    h4
-      font-size: 110%
-      margin-top: .5em
-      margin-bottom: .25em
-
-    p
-      margin-top: .25em
-      margin-bottom: .5em
-
-    td
-      &.asset
-        width: 72px
-
-        a img
-          padding: 2px
-          background-color: #eee
-          border: 1px solid #ccc
-
-      &.asset-title, &.tag-name
-        font-size: 115%
-        font-weight: bold
-
-      &.asset-title a, &.tag-name a
-        text-decoration: none
-        color: black
-
-      &.asset-tags a
-        color: black
-        text-decoration: none
-
-  td.asset-title a:hover
-    color: blue
-    text-decoration: underline
-
-  &.index td
-    &.asset-tags a:hover, &.tag-name a:hover
-      color: blue
-      text-decoration: underline
-
-  .caption
-    color: #9eb3bf
-    font-style: italic
-    font-weight: normal
-    margin: 10px
-
-  th.content_type
-    width: 120px
+#assets_table
 
   td
-    &.content_type
-      width: 120px
-      color: #9eb3bf
-      font-style: italic
-      font-weight: normal
+    &.asset
+      :width        72px
+      :text
+        :align      center
 
-    &.add-to-bucket
-      width: 90px
+      a img
+        :padding    2px
+        :background
+          :color    #eee
+        :border     1px solid #ccc
 
+    &.asset-title,
+    &.tag-name
+      :font
+        :size       115%
+        :weight     bold
+      
+      a
+        :text
+          :decoration none
+        :color      black
+
+        &:hover
+          :color    #06c
+          :text
+            :decoration underline
+
+    &.asset-tags
+    
+      a
+        :color      black
+        :text
+          :decoration none
+    
+    &.asset-tags,
+    &.tag-name
+    
+      a:hover
+        :color      #06c
+        :text
+          :decoration underline
+
+  .caption
+    :color          #9eb3bf
+    :font
+      :style        italic
+      :weight       normal
+    :margin         10px
+
+  .content_type
+    :width          180px
+    :color          #9eb3bf
+    :font
+      :style        italic
+      :weight       normal
+
+  .add-to-bucket
+    :width        90px
 
 #assets
   clear: both
