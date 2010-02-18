@@ -2,7 +2,7 @@
 # require File.dirname(__FILE__) + '/lib/url_additions'
 # include UrlAdditions
 
-class FileExtension < Radiant::Extension
+class PaperclippedExtension < Radiant::Extension
   version "0.8.0"
   description "Assets extension based on the lightweight Paperclip plugin."
   url "http://github.com/squaretalent/radiant-file-extension"
@@ -11,7 +11,7 @@ class FileExtension < Radiant::Extension
     
     # Main RESTful routes for Assets
     map.namespace :admin, :member => { :remove => :get }, :collection => { :refresh => :post } do |admin|
-      admin.resources :assets, :as => :files
+      admin.resources :assets
     end
     
     # Bucket routes
@@ -24,7 +24,7 @@ class FileExtension < Radiant::Extension
     end
     
     # File downloader
-    map.resources :assets, :as => :files, :only => :show
+    map.resources :assets, :only => :show
   end
   
   extension_config do |config|
@@ -80,7 +80,7 @@ class FileExtension < Radiant::Extension
     end
     
     tab :Design do
-      add_item :Files, "/admin/files", :before => :Layouts
+      add_item :Assets, "/admin/assets", :before => :Layouts
     end
     
   end
