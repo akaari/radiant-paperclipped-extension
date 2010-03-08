@@ -1,48 +1,33 @@
 Paperclipped
 ---
 
-## Fork notes
+## 0.8.1 - S3 Kingdom - Square Talent 2010/03/08
 
-I've updated this to support 0.9.0, We have a naming convention for all the extensions that we keep in our core.
+Unfortunately we can't use this with european buckets, but you can set your account to go US by default (I gave in and did this)
 
-For that reason it is now called file, not paperclipped.
+AWS-S3 literally just started working, I don't know what happened, but I put it down to dodgy configuration, which put me on a war path.
 
-Refactor Results
+Based on the fact that storing assets on the local server is becoming obsolete and impossible (see: heroku). There have been some changes made which make the convention amazon s3.
 
-* Cleaner differences between assets/bucket, this was originally undertaken by bkingman
-* Javascript and Styles work in 0.9.0
-* Interface has been brought into line with 0.9.0, lists and popups are now the norm
-* Use the word files, not assets.
+This has involved modifying the standard configuration, however I don't want to overwrite existing configuration, so this has meant a change to an existing migration
 
+Setting Changes
 
-## Fork notes
+* assets.storage.s3 is assumed
+* assets.s3.bucket defines both the bucket on alias url
+* assets.s3.path defines where in the bucket the files should be referenced
+* if not using s3, all files will be saved to public/:class/:basename_:style.:extension (eg: public/assets/mypicture_small.png)
 
-I've just refactored the Asset machinery, with these goals:
+Other changes
 
-* to support the definition of styles and processors per file type, rather than for all Assets at once
-* to move structural information (like the definition of asset types) into the extension rather than the model class
-* to make the Asset class more readable (and to make it read more like a normal ActiveRecord class)
-* to replace the Mime::Types machinery which I think was more than we really needed
-* to stop paperclipped dropping quite so many warnings in the logs
-* to make it (much) easier for me to write other extensions that extend paperclipped functionality
-
-The only real change is the creation of an AssetType class to take over the remembering of mime types and the construction of SQL. I hope you agree it reads a lot better now: I'm already finding it easier to work with.
-
-will at spanner, 13/12/09
-
-
-## IMPORTANT!
-
-This version of Paperclipped technically requires Radiant 0.8.0 or higher. Changes in the caching system and the updgrade to Rails 2.3.2 break the previous versions of the extension, but there are a few work arounds and it should work with 0.7.1. Just in case, the previous version is still around, on a branch marked Radiant-0.7.1. 
-
-Let me know if this works and if you run into any issues. 
-
+* images moved to /public/admin/assets from /public/images/assets
+* removed a random floating haml file under public
 
 ###Installation
 
 To install paperclipped, just run 
  
-	rake production db:migrate:extensions
+	rake production radiant:extensions:paperclipped:migrate
 	rake production radiant:extensions:paperclipped:update
 
 This runs the database migrations and installs the javascripts, images and css.
@@ -99,8 +84,7 @@ Another important tag is the <code><r:assets:each>...</r:assets:each></code>. If
 * `order` and `by` lets you control sorting;
 * `extensions` allows you to filter assets by file extensions; you can specify multiple extensions separated by `|`.
 
-<code><pre>`<r:if_assets [min_count="0"]>` and `<r:unless_assets [min_count="0"]>` 
-</code></pre>
+    `<r:if_assets [min_count="0"]>` and `<r:unless_assets [min_count="0"]>` 
   
 conditional tags let you optionally render content based on the existance of tags. They accept the same options as `<r:assets:each>`.
 
@@ -121,25 +105,19 @@ Also, for vertical centering of images, you have the handy `<r:assets:top_paddin
     </ul>
    
     
-###Using Amazon s3
-Everything works as before, but now if you want to add S3 support, you simply set the storage setting to "s3". 
+### Amazon S3
 
-<pre><code>Radiant::Config[assets.storage] = "s3"</code></pre>
- 
-Then add 3 new settings with your Amazon credentials, either in the console or with the [Settings](http://github.com/Squeegy/radiant-settings/tree/master) extension:
+This is now the assumed standard, to disable add the config
 
-<pre><code>Radiant::Config[assets.s3.bucket] = "my_supercool_bucket"
-Radiant::Config[assets.s3.key] = "123456"
-Radiant::Config[assets.s3.secret] = "123456789ABCDEF"
-</code></pre>
+    Radiant::Config[assets.storage] = "filesystem"
 
 and finally the path you want to use within your bucket, which uses the same notation as the Paperclip plugin.
 
-<pre><code>Radiant::Config[assets.path] = :class/:id/:basename_:style.:extension 
-</code></pre>
+    Radiant::Config[assets.s3.path] = :class/:basename_:style.:extension
 
-The path setting, along with a new <code>url</code> setting can be used with the file system to customize both the path and url of your assets.
+you will need to set up your sub domain to point to the amazon servers by creating a cname pointing to
 
+    mydomain.com.s3.amazonaws.com
 
 ### Migrating from the page_attachments extension
 
@@ -148,15 +126,12 @@ If you're moving from page_attachments to paperclipped, here's how to migrate sm
 First, remove or disable the page_attachments extension, and install the paperclipped extension.
 For example:
 
-<pre><code>rake ray:dis name=page_attachments
-rake ray:assets
-</code></pre>
-    
+    rake ray:dis name=page_attachments
+    rake ray:assets    
   
 The migration has now copied your original `page_attachments` table to `old_page_attachments`.
 
-<pre><code>rake radiant:extensions:paperclipped:migrate_from_page_attachments
-</code></pre>
+    rake radiant:extensions:paperclipped:migrate_from_page_attachments
   
 This rake task will create paperclipped-style attachments for all `OldPageAttachments`. It will also ask you if you want to clean up the old table and thumbnails in `/public/page_attachments`.
 

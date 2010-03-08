@@ -80,7 +80,7 @@ Asset.MakeDroppables = function () {
           var tag_type = classes[0];
           
           var tag = '<r:assets:' + tag_type + ' title="'+ asset_title +'" />';
-          
+
 
           Form.Element.focus(box);
         	if(!!document.selection){

@@ -2,16 +2,16 @@
 # require File.dirname(__FILE__) + '/lib/url_additions'
 # include UrlAdditions
 
-class FileExtension < Radiant::Extension
-  version "0.8.0"
+class PaperclippedExtension < Radiant::Extension
+  version "0.8.1"
   description "Assets extension based on the lightweight Paperclip plugin."
-  url "http://github.com/squaretalent/radiant-file-extension"
+  url "http://github.com/squaretalent/radiant-paperclipped-extension"
   
   define_routes do |map|
     
     # Main RESTful routes for Assets
     map.namespace :admin, :member => { :remove => :get }, :collection => { :refresh => :post } do |admin|
-      admin.resources :assets, :as => :files
+      admin.resources :assets
     end
     
     # Bucket routes
@@ -24,11 +24,11 @@ class FileExtension < Radiant::Extension
     end
     
     # File downloader
-    map.resources :assets, :as => :files, :only => :show
+    map.resources :assets, :only => :show
   end
   
   extension_config do |config|
-    # config.gem 'paperclip', :version => '~> 2.3', :source => 'http://gemcutter.org'
+    config.gem 'aws-s3', :lib => 'aws/s3', :version => '~> 0.6.2', :source => 'http://gemcutter.org'
     config.gem 'acts_as_list', :source => 'http://gemcutter.org'
     config.gem 'will_paginate', :version => '~> 2.3.11', :source => 'http://gemcutter.org'
     config.gem 'responds_to_parent', :source => 'http://gemcutter.org'
@@ -79,14 +79,10 @@ class FileExtension < Radiant::Extension
       Paperclip.options[:command_path] = Radiant::Config["assets.image_magick_path"]
     end
     
-    tab :Design do
-      add_item :Files, "/admin/files", :before => :Layouts
+    tab 'Design' do
+      add_item 'Assets', '/admin/assets', :before => 'Layouts'
     end
     
-  end
-  
-  def deactivate
-    # admin.tabs.remove "Assets"
   end
   
 end

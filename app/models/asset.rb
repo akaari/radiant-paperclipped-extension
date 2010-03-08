@@ -14,14 +14,15 @@ class Asset < ActiveRecord::Base
                       asset.paperclip_processors 
                     },
                     :whiny_thumbnails => false,
-                    :storage => Radiant::Config["assets.storage"] == "s3" ? :s3 : :filesystem, 
+                    :storage => Radiant::Config["assets.storage"] == "filesystem" ? :filesystem : :s3, 
                     :s3_credentials => {
                       :access_key_id => Radiant::Config["assets.s3.key"],
                       :secret_access_key => Radiant::Config["assets.s3.secret"]
                     },
-                    :bucket => Radiant::Config["assets.s3.bucket"],
-                    :url => Radiant::Config["assets.url"] ? Radiant::Config["assets.url"] : "/:class/:id/:basename:no_original_style.:extension", 
-                    :path => Radiant::Config["assets.path"] ? Radiant::Config["assets.path"] : ":rails_root/public/:class/:id/:basename:no_original_style.:extension"
+                    :s3_host_alias  => Radiant::Config['assets.s3.bucket'],
+                    :bucket         => Radiant::Config['assets.s3.bucket'],
+                    :url            => Radiant::Config["assets.storage"] == "filesystem" ? "/:class/:basename_:style.:extension" : ":s3_alias_url",
+                    :path           => Radiant::Config["assets.storage"] == "filesystem" ? ":rails_root/public/:class/:basename_:style.:extension" : Radiant::Config['assets.s3.path']
 
   before_save :assign_title
   after_post_process :note_dimensions
@@ -40,7 +41,7 @@ class Asset < ActiveRecord::Base
   def thumbnail(style_name='original')
     return asset.url if style_name.to_sym == :original
     return asset.url(style_name.to_sym) if has_style?(style_name)
-    return "/images/assets/#{asset_type.name}_#{style_name.to_s}.png"
+    return "/images/admin/assets/#{asset_type.name}_#{style_name.to_s}.png"
   end
   
   def has_style?(style_name)

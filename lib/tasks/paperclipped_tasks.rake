@@ -1,22 +1,22 @@
 namespace :radiant do
   namespace :extensions do
-    namespace :file do
+    namespace :paperclipped do
       
       desc "Runs the migration of the Assets extension"
       task :migrate => :environment do
         require 'radiant/extension_migrator'
         if ENV["VERSION"]
-          FileExtension.migrator.migrate(ENV["VERSION"].to_i)
+          PaperclippedExtension.migrator.migrate(ENV["VERSION"].to_i)
         else
-          FileExtension.migrator.migrate
+          PaperclippedExtension.migrator.migrate
         end
       end
       
       desc "Copies public assets of the Assets to the instance public/ directory."
       task :update => :environment do
         is_svn_or_dir = proc {|path| path =~ /\.svn/ || File.directory?(path) }
-        Dir[FileExtension.root + "/public/**/*"].reject(&is_svn_or_dir).each do |file|
-          path = file.sub(FileExtension.root, '')
+        Dir[PaperclippedExtension.root + "/public/**/*"].reject(&is_svn_or_dir).each do |file|
+          path = file.sub(PaperclippedExtension.root, '')
           directory = File.dirname(path)
           puts "Copying #{path}..."
           mkdir_p RAILS_ROOT + directory
@@ -89,8 +89,8 @@ If you would like to use this mode type \"yes\", type \"no\" or just hit enter t
           c.remove_column :assets, :thumbnail
         end
 
-        FileExtension.migrator.new(:up, FileExtension.migrations_path).send(:assume_migrated_upto_version, 3)
-        FileExtension.migrator.migrate
+        PaperclippedExtension.migrator.new(:up, PaperclippedExtension.migrations_path).send(:assume_migrated_upto_version, 3)
+        PaperclippedExtension.migrator.migrate
       end
     end
   end
