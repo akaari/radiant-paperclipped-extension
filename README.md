@@ -20,8 +20,14 @@ Setting Changes
 
 Other changes
 
-* images moved to /public/admin/assets from /public/images/assets
-* removed a random floating haml file under public
+* images moved to /public/images/admin/assets from /public/images/assets
+* removed a random haml file laying around under public
+* Paperclip has been abstracted to the latest gem
+* working on 0.9.0, interface has been brought completely in line
+
+TODO
+
+* Investigate moving away from the bucket style interface
 
 ###Installation
 
@@ -42,17 +48,13 @@ If you do install the Settings Extension you should be sure to add a config.exet
    
 Also the Settings Extension migration should be run before Paperclipped's migration.
 
-You also need the ImageSize gem required in `environment.rb`:
-
-    config.gem 'imagesize', :lib => 'image_size'
-
 The configuration settings also enable a list of the allowed file types, maximum file size and should you need it, the path to your installation of Image Magick (this should not be needed, but I sometimes had a problem when using mod_rails).
 
-###Using Paperclipped
+### Using Paperclipped
 
 Once installed, you get a new Tab with the entire assets library, a Bucket à la Mephisto (though only the concept is stolen) and a search. You can also easily attach assets to any page and directly upload them to a page.
 
-###Asset Tags
+### Asset Tags
 
 There are a veriety of new tags. The basic tag is the <code><r:assets /></code> tag, which can be used either alone or as a double tag. This tag requires the "title" attribute, which references the asset. If you use the drag and drop from the asset bucket, this title will be added for you. 
 

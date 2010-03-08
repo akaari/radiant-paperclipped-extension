@@ -7,8 +7,8 @@
           = f.label :title, 'Title' # t('title')
           = f.text_field :title, :class => 'textbox activate', :maxlength => 255
       - form.edit_extended_metadata do
-        #extended_metadata{ :style => 'display:none' }
-          %table.fieldset{:cellpadding=>"0", :cellspacing=>"0", :border=>"0"}       
+        #extended_metadata{meta_visible(:meta)}
+          %table.fieldset
             %tr
               %th.label Caption
               %td.field= f.text_field :caption, :class => 'textbox', :maxlength => 255 
@@ -19,8 +19,7 @@
                 
           = render_region :extended_metadata
         %p.more_or_less
-          %a{:id=>"more_extended_metadata", :href=>"javascript: $('extended_metadata').show(); $('less_extended_metadata').show(); $('more_extended_metadata').hide(); this.stop()", :style=>(meta_errors? ? "display: none" : nil)} More
-          %a{:id=>"less_extended_metadata", :href=>"javascript: $('extended_metadata').hide(); $('more_extended_metadata').show(); $('less_extended_metadata').hide(); this.stop()", :style=>(!meta_errors? ? "display: none" : nil)} Hide       
+          %a{:href=>'#extended_metadata',:class => "rounded_bottom_right rounded_bottom_left #{(meta_errors? ? 'more' : 'less')}"}= meta_label
       - form.edit_content do
         - unless @asset.new_record?
           %p.filename
