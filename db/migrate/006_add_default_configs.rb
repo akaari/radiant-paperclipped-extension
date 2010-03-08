@@ -5,6 +5,7 @@ class AddDefaultConfigs < ActiveRecord::Migration
   def self.up
     Radiant::Config['assets.additional_thumbnails'] = "normal=640x640>"
     Radiant::Config['assets.display_size'] = "original"
+    Radiant::Config['assets.storage'] = "filesystem"
     Radiant::Config['assets.s3.bucket'] = "s3.domain.tld"
     Radiant::Config['assets.s3.key'] = "123456"
     Radiant::Config['assets.s3.secret'] = "123456789ABCDEF"

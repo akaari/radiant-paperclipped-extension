@@ -13,10 +13,10 @@ This has involved modifying the standard configuration, however I don't want to 
 
 Setting Changes
 
-* assets.storage.s3 is assumed
-* assets.s3.bucket defines both the bucket on alias url
+* filesystem storage is default, but removing this setting allows s3 to take over
+* filesystem has a defined location of public/:class/:basename_:style.:extension (eg: public/assets/mypicture_small.png)
+* assets.s3.bucket defines both the bucket on alias url, you must use a cname reference for s3
 * assets.s3.path defines where in the bucket the files should be referenced
-* if not using s3, all files will be saved to public/:class/:basename_:style.:extension (eg: public/assets/mypicture_small.png)
 
 Other changes
 
@@ -107,13 +107,16 @@ Also, for vertical centering of images, you have the handy `<r:assets:top_paddin
     
 ### Amazon S3
 
-This is now the assumed standard, to disable add the config
+Whilst this isn't assumed, simply remove the following setting to enable it
 
     Radiant::Config[assets.storage] = "filesystem"
 
-and finally the path you want to use within your bucket, which uses the same notation as the Paperclip plugin.
+then configure the s3 specific settings
 
-    Radiant::Config[assets.s3.path] = :class/:basename_:style.:extension
+    Radiant::Config[assets.s3.bucket] = ":class/:basename_:style.:extension"
+    Radiant::Config[assets.s3.key] = ":class/:basename_:style.:extension"
+    Radiant::Config[assets.s3.secret] = ":class/:basename_:style.:extension"
+    Radiant::Config[assets.s3.path] = ":class/:basename_:style.:extension"
 
 you will need to set up your sub domain to point to the amazon servers by creating a cname pointing to
 
