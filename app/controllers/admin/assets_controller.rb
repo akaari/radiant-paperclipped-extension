@@ -21,6 +21,10 @@ class Admin::AssetsController < Admin::ResourceController
   def create
     @asset = Asset.new(params[:asset])
     if @asset.save
+      # This seems stupid, but it's the only way to call the processors and styles
+      # we need to know the file type, and this only happens after save
+      @asset = Asset.find(@asset.id)
+      @asset.update_attributes(params[:asset])
       if params[:page]
         @page = Page.find(params[:page])
         @asset.pages << @page
@@ -52,7 +56,6 @@ class Admin::AssetsController < Admin::ResourceController
       end
     end
   end
-    
   
   # Refreshes the paperclip thumbnails
   def refresh

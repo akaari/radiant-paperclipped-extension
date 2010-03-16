@@ -29,9 +29,13 @@
               = image_tag @asset.thumbnail(Radiant::Config['assets.display_size'].to_sym)
             - else
               = link_to image_tag(@asset.thumbnail(:thumbnail)), @asset.asset.url
-        %p
-          = f.label :asset, "Replace File" #t('replace_file')
-          = f.file_field :asset
+          %p
+            = f.label :asset, "Replace File"
+            = f.file_field :asset
+        - else
+          %p
+            = f.label :asset, "File"
+            = f.file_field :asset
             
   - render_region :form_bottom do |form_bottom|
     - form_bottom.edit_buttons do
