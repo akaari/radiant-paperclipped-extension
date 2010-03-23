@@ -2,7 +2,7 @@ class Admin::AssetsController < Admin::ResourceController
   skip_before_filter :verify_authenticity_token, :only => :create
     
   def index 
-    @assets = Asset.search(params[:search], params[:filter], params[:page])
+    @assets = Asset.search(params[:search], params[:filter])
     @page = Page.find(params[:asset_page]) if params[:asset_page]
 
     respond_to do |format|
@@ -21,10 +21,12 @@ class Admin::AssetsController < Admin::ResourceController
   def create
     @asset = Asset.new(params[:asset])
     if @asset.save
-      # This seems stupid, but it's the only way to call the processors and styles
-      # we need to know the file type, and this only happens after save
+      
+      # This feels stupid, but we need to recall the processors and styles
+      # We need to know the file type and this only happens after save
       @asset = Asset.find(@asset.id)
       @asset.update_attributes(params[:asset])
+      
       if params[:page]
         @page = Page.find(params[:page])
         @asset.pages << @page

@@ -26,7 +26,8 @@ class Asset < ActiveRecord::Base
 
   before_save :assign_title
   after_post_process :note_dimensions
-                                 
+  
+  validates_uniqueness_of :asset_file_name, :message => "This file already exists"
   validates_attachment_presence :asset, :message => "You must choose a file to upload!"
   validates_attachment_content_type :asset, 
     :content_type => Radiant::Config["assets.content_types"].gsub(' ','').split(',') if Radiant::Config.table_exists? && Radiant::Config["assets.content_types"] && Radiant::Config["assets.skip_filetype_validation"] == nil
@@ -125,7 +126,7 @@ private
       AssetType.known_types
     end
     
-    def search(search, filter, page)
+    def search(search, filter)
       unless search.blank?
 
         search_cond_sql = []
@@ -140,30 +141,18 @@ private
       end
 
       options = { :conditions => @conditions,
-                  :order => 'created_at DESC',
-                  :page => page,
-                  :per_page => 10 }
-
+                  :order => 'created_at DESC' }
+                                  
       @asset_types = filter.blank? ? [] : filter.keys
       unless @asset_types.empty?
-        options[:total_entries] = count_with_asset_types(@asset_types, :conditions => @conditions)
-        Asset.paginate_by_asset_types(@asset_types, :all, options )
+        with_scope(:find => { :conditions => AssetType.conditions_for(@asset_types) }) do
+          find(:all, options)
+        end
       else
-        Asset.paginate(:all, options)
+        find(:all, options)
       end
     end
-
-    def find_all_by_asset_types(asset_types, *args)
-      with_asset_types(asset_types) { find *args }
-    end
     
-    def count_with_asset_types(asset_types, *args)
-      with_asset_types(asset_types) { count *args }
-    end
-    
-    def with_asset_types(asset_types, &block)
-      with_scope(:find => { :conditions => AssetType.conditions_for(asset_types) }, &block)
-    end
   end
 
   def self.eigenclass
