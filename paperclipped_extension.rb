@@ -5,7 +5,7 @@
 
 require 'paperclip'
 class PaperclippedExtension < Radiant::Extension
-  version "0.8.1"
+  version "0.9"
   description "Assets extension based on the lightweight Paperclip plugin."
   url "http://github.com/squaretalent/radiant-paperclipped-extension"
   

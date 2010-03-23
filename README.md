@@ -1,7 +1,7 @@
 Paperclipped
 ---
 
-## 0.8.1 - S3 Kingdom - Square Talent 2010/03/08
+## 0.9 - Square Talent Edition
 
 Unfortunately we can't use this with european buckets, but you can set your account to go US by default (I gave in and did this)
 
