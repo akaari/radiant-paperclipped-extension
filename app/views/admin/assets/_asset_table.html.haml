@@ -33,7 +33,7 @@
                 = link_to image_tag('/images/admin/extensions/paperclipped/add-to-bucket.png', :alt => 'Add to bucket'), add_bucket_url(asset)
             - tbody.remove_cell do
               %td.remove
-                = link_to image('remove', :alt => 'Remove File'), remove_admin_asset_path(asset)
+                = link_to t('remove'), remove_admin_asset_path(asset)
     - else
       %tr
         %td.note{ :colspan => "5" } 
