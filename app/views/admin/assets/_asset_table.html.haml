@@ -30,7 +30,7 @@
                 = asset.asset_content_type
             - tbody.bucket_cell do
               -#%td.add-to-bucket
-                = link_to image_tag('/images/admin/assets/add-to-bucket.png', :alt => 'Add to bucket'), add_bucket_url(asset)
+                = link_to image_tag('/images/admin/extensions/paperclipped/add-to-bucket.png', :alt => 'Add to bucket'), add_bucket_url(asset)
             - tbody.remove_cell do
               %td.remove
                 = link_to image('remove', :alt => 'Remove File'), remove_admin_asset_path(asset)

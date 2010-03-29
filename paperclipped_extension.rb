@@ -35,8 +35,7 @@ class PaperclippedExtension < Radiant::Extension
     config.gem 'acts_as_list', :source => 'http://gemcutter.org'
     config.gem 'will_paginate', :version => '~> 2.3.11', :source => 'http://gemcutter.org'
     config.gem 'responds_to_parent', :source => 'http://gemcutter.org'
-    # I'm assuming this isn't needed anymore
-    # config.gem 'imagesize', :lib => 'image_size'
+
     config.after_initialize do
       Paperclip.interpolates :no_original_style do |attachment, style|
         style ||= :original
