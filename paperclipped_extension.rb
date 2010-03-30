@@ -61,7 +61,7 @@ class PaperclippedExtension < Radiant::Extension
       admin.asset = Radiant::AdminUI.load_default_asset_regions
     end
     
-    admin.page.edit.add :main, "/admin/assets/header"
+    admin.page.edit.add :main, "/admin/assets/top"
     admin.page.edit.add :main, "/admin/bucket/show_bucket_link", :before => "edit_header"
     admin.page.edit.add :main, "/admin/bucket/assets_bucket", :after => "edit_buttons"
     

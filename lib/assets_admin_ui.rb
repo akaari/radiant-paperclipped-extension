@@ -23,7 +23,7 @@ module AssetsAdminUI
               index.thead.concat %w{thumbnail_header title_header content_type_header modify_header}
               index.tbody.concat %w{thumbnail_cell title_cell content_type_cell bucket_cell remove_cell}
               index.bucket_pane.concat %w{bucket_notes bucket bucket_bottom}
-              index.asset_tabs.concat %w{bucket_tab}
+              index.asset_tabs.concat %w{search_tab}
               index.paginate
             end
             asset.remove = asset.index
