@@ -1,23 +1,25 @@
 #assets-container
   #asset-tabs
     - render_region :asset_tabs do |asset_tabs|
+      - asset_tabs.bucket_tab do
+        %a.asset-tab.here{ :href => "#bucket", :id => "tab_bucket" } Bucket
+      - asset_tabs.search_tab do  
+        %a.asset-tab{ :href => "#search-assets", :id => "tab_search" } Search
+        
       - if @page && !@page.new_record? 
         - asset_tabs.attachment_tab do
           %a.asset-tab{ :href => "#page-attachments", :id => "tab_page-attachments" } Attached Assets
         - asset_tabs.upload_tab do
           %a.asset-tab{ :href => "#upload-assets", :id => "tab_upload-assets" } Upload
-        - asset_tabs.bucket_tab do
-          %a.asset-tab{ :href => "#bucket", :id => "tab_bucket" } Bucket
-        - asset_tabs.search_tab do  
-          %a.asset-tab{ :href => "#search-assets" } Search
       - else
-        - asset_tabs.bucket_tab do
-          %a.asset-tab.here{ :href => "#" } Bucket
-
+        - asset_tabs.attachment_tab do
+          -# empty
+        - asset_tabs.upload_tab do
+          -# empty
   #assets 
     #bucket.pane
       - render_region :bucket_pane do |bucket_pane|
-        - bucket_pane.bucket_notes do      
+        - bucket_pane.bucket_notes do 
           %p
             %span.note The Bucket provides temporary storage for your items for use in pages or snippets.
             %span#clear-bucket
@@ -26,11 +28,11 @@
           = render :partial => "admin/bucket/bucket"
         - bucket_pane.bucket_bottom do 
           .clear
-
       
-    - if @page && !@page.new_record? 
-      - render_region :asset_panes do |asset_panes|
-        - asset_panes.page_attachments do 
+    - render_region :asset_panes do |asset_panes|
+
+      - asset_panes.page_attachments do 
+        - if @page && !@page.new_record?
           #page-attachments.pane
             %p
               %span.note 
@@ -39,22 +41,26 @@
             %ul#attachments
               = render :partial => "admin/bucket/page_assets" 
             .clear
-      
-        - asset_panes.upload do
+        - else
+          -#empty
+  
+      - asset_panes.upload do
+        - if @page && !@page.new_record?
           #upload-assets.pane
             %p
               %span.note Assets uploaded here will be automatically associated with this page.
             = render :partial => "admin/bucket/upload_to_page"
             .clear
-          
-        - asset_panes.search do
-          #search-assets.pane
-            - form_tag do
-              %p
-                %label.note{ :for => 'search' } Search for assets 
-                %input{ :type => "hidden", :name => "search", :value => @page.id }
-                %input{ :type => "search", :id => "search", :name => "search" }
-                = submit_tag "Search"
-            #search-results
-            .clear
-            = observe_field 'search',  :frequency => 1, :update => 'search-results', :url =>  admin_assets_path(:asset_page => @page), :method => 'get', :with => "'search=' + escape(value)"
+        - else
+          -#empty
+        
+      - asset_panes.search do
+        #search-assets.pane
+          - form_tag do
+            %p
+              %label.note{ :for => 'search' } Search for assets 
+              %input{ :type => "hidden", :name => "search", :value => @page.id }
+              %input{ :type => "search", :id => "search", :name => "search" }
+          #search-results
+          .clear
+          = observe_field 'search',  :frequency => 1, :update => 'search-results', :url =>  admin_assets_path(:asset_page => @page), :method => 'get', :with => "'search=' + escape(value)"

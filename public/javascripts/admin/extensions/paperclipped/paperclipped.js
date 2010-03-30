@@ -13,7 +13,7 @@ Asset.ChooseTab = function (element) {
   var pane = $(element.href.split('#')[1]);
   var panes = $('assets').select('.pane');
   
-  var tabs = $('asset-tabs').select('.asset-tab');
+  var tabs = $('asset-tabs').select('.asset-tab.here');
   tabs.each(function(tab) {tab.removeClassName('here');});
   
   element.addClassName('here');;
@@ -83,20 +83,20 @@ Asset.MakeDroppables = function () {
 
 
           Form.Element.focus(box);
-        	if(!!document.selection){
-        		box.focus();
-        		var range = (box.range) ? box.range : document.selection.createRange();
-        		range.text = tag;
-        		range.select();
-        	}else if(!!box.setSelectionRange){
-        		var selection_start = box.selectionStart;
-        		box.value = box.value.substring(0,selection_start) + tag + box.value.substring(box.selectionEnd);
-        		box.setSelectionRange(selection_start + tag.length,selection_start + tag.length);
-        	}
-        	box.focus();
+          if(!!document.selection){
+            box.focus();
+            var range = (box.range) ? box.range : document.selection.createRange();
+            range.text = tag;
+            range.select();
+          }else if(!!box.setSelectionRange){
+            var selection_start = box.selectionStart;
+            box.value = box.value.substring(0,selection_start) + tag + box.value.substring(box.selectionEnd);
+            box.setSelectionRange(selection_start + tag.length,selection_start + tag.length);
+          }
+          box.focus();
         }
       });      
-    	box.addClassName('droppable');
+      box.addClassName('droppable');
     }
   });
 }
@@ -114,9 +114,9 @@ Asset.ResetForm = function (name) {
   element.reset();
   
   ta = $$(".wymified");
-	for (var i = 0; i < ta.length; i++){
-		boot_wym(ta[i]);
-	}
+  for (var i = 0; i < ta.length; i++){
+    boot_wym(ta[i]);
+  }
 }
 
 Asset.AddAsset = function (name) {
@@ -149,8 +149,8 @@ function when(obj, fn) {
 }
 
 document.observe("dom:loaded", function() {
-  when('page-attachments', function(){ 
-    Asset.ChooseTabByName('page-attachments');
+  when('bucket', function(){ 
+    Asset.ChooseTabByName('bucket');
     Asset.MakeDroppables();
     Asset.MakeDraggables();
   });  
