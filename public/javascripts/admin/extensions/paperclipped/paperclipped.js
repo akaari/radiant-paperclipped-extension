@@ -158,6 +158,4 @@ document.observe("dom:loaded", function() {
     Asset.MakeDroppables();
     Asset.MakeDraggables();
   }
-    
-  });  
 });
