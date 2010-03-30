@@ -149,9 +149,15 @@ function when(obj, fn) {
 }
 
 document.observe("dom:loaded", function() {
-  when('bucket', function(){ 
+  if($('page-attachments')) {
+    Asset.ChooseTabByName('page-attachments');
+    Asset.MakeDroppables();
+    Asset.MakeDraggables();
+  } else {
     Asset.ChooseTabByName('bucket');
     Asset.MakeDroppables();
     Asset.MakeDraggables();
+  }
+    
   });  
 });

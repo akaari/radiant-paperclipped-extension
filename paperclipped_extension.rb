@@ -66,7 +66,7 @@ class PaperclippedExtension < Radiant::Extension
     admin.page.edit.add :main, "/admin/bucket/assets_bucket", :after => "edit_buttons"
     
     %w{page}.each do |view|
-      admin.send(view).edit.asset_tabs.concat %w{bucket_tab attachment_tab upload_tab search_tab}
+      admin.send(view).edit.asset_tabs.concat %w{attachment_tab bucket_tab upload_tab search_tab}
       admin.send(view).edit.bucket_pane.concat %w{bucket_notes bucket bucket_bottom}
       admin.send(view).edit.asset_panes.concat %w{page_attachments upload search}
     end
